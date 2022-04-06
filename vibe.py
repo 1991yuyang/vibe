@@ -4,11 +4,11 @@ import cv2
 
 
 N = 20  # 每个像素的背景样本集合容量
-R = 25  # 定义以当前像素值为中心的球体半径范围
+R = 35  # 定义以当前像素值为中心的球体半径范围
 Umin = 2  # 定义在球体范围内的背景模型元素数目阈值，如果大于阈值则像素点为背景，否则为前景
-frame_h = 480
-frame_w = 640
-neighborhoods_count = 24  # 指定当前像素几邻域
+frame_h = 120
+frame_w = 160
+neighborhoods_count = 8  # 指定当前像素几邻域
 phai = 16
 foreground_pixel_keep_times = 20  # 前景像素点连续为foreground_pixel_keep_times次前景时将其变为背景像素点
 pixel_update_prob = 1 / phai
