@@ -124,7 +124,7 @@ def update_background_samples(is_first_frame, gray_frame, background_times, fore
                     background_samples[r, c, sample_index] = gray_frame[r_n, c_n]
                     background_samples_keep_times[r_n, c_n] += 1
                     background_samples_keep_times[r_n, c_n, sample_index] = 1
-                    break
+                    # break
     # 更新background_times, foreground_times
     background_times[foreground_marks] = 0
     foreground_times[background_marks] = 0
@@ -132,17 +132,16 @@ def update_background_samples(is_first_frame, gray_frame, background_times, fore
     foreground_times[foreground_marks] += 1
     # 判断foreground_times是否有超过foreground_pixel_keep_times的，如果有将其变为背景像素点，并按照概率更新自己的背景样本集
     foreground_to_background_mark = foreground_times > foreground_pixel_keep_times
-    update_sample_mark = np.logical_and(rd.random(foreground_times.shape) < 1, foreground_to_background_mark)
+    update_sample_mark = np.logical_and(rd.random(foreground_times.shape) < pixel_update_prob, foreground_to_background_mark)
     foreground_times[foreground_to_background_mark] = 0
     background_times[foreground_to_background_mark] = 1
     foreground_marks[foreground_to_background_mark] = False
     background_marks[foreground_to_background_mark] = True
     for r, c in zip(*np.where(update_sample_mark)):
-        if rd.random() < pixel_update_prob:
-            sample_index = min_keep_prob_index[r, c]
-            background_samples[r, c, sample_index] = gray_frame[r, c]
-            background_samples_keep_times[r, c] += 1
-            background_samples_keep_times[r, c, sample_index] = 1
+        sample_index = min_keep_prob_index[r, c]
+        background_samples[r, c, sample_index] = gray_frame[r, c]
+        background_samples_keep_times[r, c] += 1
+        background_samples_keep_times[r, c, sample_index] = 1
     return background_samples, background_times, foreground_times, background_samples_keep_times, background_marks, foreground_marks
 
 
