@@ -3,7 +3,7 @@ from numpy import random as rd
 import cv2
 
 
-N = 20  # 每个像素的背景样本集合容量
+N = 25  # 每个像素的背景样本集合容量
 R = 35  # 定义以当前像素值为中心的球体半径范围
 Umin = 2  # 定义在球体范围内的背景模型元素数目阈值，如果大于阈值则像素点为背景，否则为前景
 frame_h = 120
@@ -132,11 +132,11 @@ def update_background_samples(is_first_frame, gray_frame, background_times, fore
     foreground_times[foreground_marks] += 1
     # 判断foreground_times是否有超过foreground_pixel_keep_times的，如果有将其变为背景像素点，并按照概率更新自己的背景样本集
     foreground_to_background_mark = foreground_times > foreground_pixel_keep_times
-    update_sample_mark = np.logical_and(rd.random(foreground_times.shape) < pixel_update_prob, foreground_to_background_mark)
     foreground_times[foreground_to_background_mark] = 0
     background_times[foreground_to_background_mark] = 1
     foreground_marks[foreground_to_background_mark] = False
     background_marks[foreground_to_background_mark] = True
+    update_sample_mark = np.logical_and(rd.random(foreground_times.shape) < pixel_update_prob, foreground_to_background_mark)
     for r, c in zip(*np.where(update_sample_mark)):
         sample_index = min_keep_prob_index[r, c]
         background_samples[r, c, sample_index] = gray_frame[r, c]
